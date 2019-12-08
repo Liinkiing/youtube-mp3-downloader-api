@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Traits\Timestampable;
 use App\Traits\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AudioRepository")
@@ -15,11 +16,13 @@ class Audio
     use Timestampable;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="string", length=255)
      */
     private $filename;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="string", length=255)
      */
     private $mimeType;
@@ -29,11 +32,6 @@ class Audio
      * @ORM\JoinColumn(nullable=false)
      */
     private $request;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getFilename(): ?string
     {

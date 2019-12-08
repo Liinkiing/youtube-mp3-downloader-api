@@ -6,16 +6,19 @@ namespace App\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait Timestampable
 {
     /**
+     * @Groups({"api"})
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Traits\Timestampable;
 use App\Traits\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AudioRequestRepository")
@@ -20,11 +21,13 @@ class AudioRequest
     private $isProcessed;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="string", length=255)
      */
     private $youtubeId;
 
     /**
+     * @Groups({"api"})
      * @ORM\OneToOne(targetEntity="App\Entity\Audio", mappedBy="request", cascade={"persist", "remove"})
      */
     private $audio;

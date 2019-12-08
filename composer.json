@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "antishov/doctrine-extensions-bundle": "^1.4",
         "aws/aws-sdk-php": "^3.128",
         "cocur/slugify": "^3.2",
         "league/flysystem-aws-s3-v3": "^1.0",
@@ -24,6 +25,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/process": "5.0.*",
         "symfony/profiler-pack": "^1.0",
+        "symfony/serializer-pack": "^1.0",
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {

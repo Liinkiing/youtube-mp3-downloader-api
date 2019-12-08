@@ -1,6 +1,21 @@
 {
+    "antishov/doctrine-extensions-bundle": {
+        "version": "1.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.4",
+            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+        },
+        "files": [
+            "./config/packages/stof_doctrine_extensions.yaml"
+        ]
+    },
     "aws/aws-sdk-php": {
         "version": "3.128.0"
+    },
+    "behat/transliterator": {
+        "version": "v1.2.0"
     },
     "cocur/slugify": {
         "version": "v3.2"
@@ -93,6 +108,9 @@
             "./config/packages/dev/easy_log_handler.yaml"
         ]
     },
+    "gedmo/doctrine-extensions": {
+        "version": "v2.4.38"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.0"
     },
@@ -140,6 +158,15 @@
     },
     "php": {
         "version": "7.3"
+    },
+    "phpdocumentor/reflection-common": {
+        "version": "2.0.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "4.3.2"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.0.1"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -283,6 +310,9 @@
     "symfony/http-kernel": {
         "version": "v5.0.1"
     },
+    "symfony/inflector": {
+        "version": "v5.0.1"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -357,6 +387,12 @@
     "symfony/profiler-pack": {
         "version": "v1.0.4"
     },
+    "symfony/property-access": {
+        "version": "v5.0.1"
+    },
+    "symfony/property-info": {
+        "version": "v5.0.1"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -370,6 +406,12 @@
             "./config/packages/routing.yaml",
             "./config/routes.yaml"
         ]
+    },
+    "symfony/serializer": {
+        "version": "v5.0.1"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.2"
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"
@@ -422,6 +464,9 @@
     },
     "twig/twig": {
         "version": "v3.0.0"
+    },
+    "webmozart/assert": {
+        "version": "1.6.0"
     },
     "zendframework/zend-code": {
         "version": "3.4.0"

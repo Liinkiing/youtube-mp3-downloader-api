@@ -1,0 +1,11 @@
+{
+  "name": "youtube-mp3-downloader-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Liinkiing/youtube-mp3-downloader-api.git",
+  "author": "Omar Jbara <omar.jbara2@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@liinkiing/ytomp3": "^1.2.0"
+  }
+}

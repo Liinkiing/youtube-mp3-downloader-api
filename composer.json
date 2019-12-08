@@ -1,4 +1,5 @@
 {
+    "name": "liinkiing/youtube-mp3-downloader-api",
     "type": "project",
     "license": "proprietary",
     "require": {

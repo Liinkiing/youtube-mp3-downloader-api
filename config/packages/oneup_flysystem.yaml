@@ -1,0 +1,15 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+oneup_flysystem:
+    adapters:
+        local_adapter:
+            local:
+                directory: '%storage_directory%'
+        s3_adapter:
+            awss3v3:
+                client: Aws\S3\S3Client
+                bucket: '%env(string:AWS_S3_BUCKET)%'
+    filesystems:
+        local_filesystem:
+            adapter: local_adapter
+        s3_filesystem:
+            adapter: s3_adapter

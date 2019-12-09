@@ -4,25 +4,27 @@
 namespace App\Wrapper;
 
 
-use Cocur\Slugify\Slugify;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
 use Spatie\Regex\Regex;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Process\Process;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class Ytomp3Wrapper
 {
     private $s3Filesystem;
+    private $slugger;
 
     private const NO_ARTIST_FOUND = 'No artist found';
     private const TITLE_DELIMITER = 'Title:';
     private const ARTIST_DELIMITER = 'Artist:';
 
-    public function __construct(FilesystemInterface $s3Filesystem)
+    public function __construct(FilesystemInterface $s3Filesystem, SluggerInterface $slugger)
     {
         $this->s3Filesystem = $s3Filesystem;
+        $this->slugger = $slugger;
     }
 
     public function process(string $youtubeUri): array
@@ -35,12 +37,14 @@ class Ytomp3Wrapper
         $tmpAudio = fopen($output, 'rb+');
         rewind($tmpAudio);
 
+        $filename = $this->createFilename($meta);
+        $displayName = $this->createDisplayname($meta);
+
         $disposition = HeaderUtils::makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $this->createFilename($meta, false)
+            $displayName
         );
 
-        $filename = $this->createFilename($meta);
 
         $this->s3Filesystem->putStream(
             $filename,
@@ -56,29 +60,38 @@ class Ytomp3Wrapper
 
         return array_merge(
             $meta,
-            compact('filename', 'mimeType')
+            compact('filename', 'mimeType', 'displayName')
         );
     }
 
-    private function createFilename(array $meta, ?bool $slugify = true): string
+    private function createFilename(array $meta): string
     {
         $filename = $meta['title'];
         if ($meta['artist']) {
             $filename .= ' - ' . $meta['artist'];
         }
-        return ($slugify ?
-                (new Slugify())->slugify($filename) :
-                str_replace(['/', '\\'], '-', $filename)
-            ) . '.mp3';
+        return $this->slugger->slug($filename)->lower() . '.mp3';
+    }
+
+    private function createDisplayname(array $meta): string
+    {
+        $filename = $this->slugger->slug($meta['title'], ' ');
+        if ($meta['artist']) {
+            $filename .= ' - ' . $meta['artist'];
+        }
+
+        return $filename . '.mp3';
     }
 
     private function extractMedata(string $output): array
     {
         $titleRegex = Regex::match('/^(' . self::TITLE_DELIMITER . ')(.*$)/m', $output);
-        $artistRegex = Regex::match('/^(' . self::ARTIST_DELIMITER . ')((?!' . self::NO_ARTIST_FOUND . ').*$)/m', $output);
+        $artistRegex = Regex::match('/^(' . self::ARTIST_DELIMITER . ')(.*$)/m', $output);
+        $title = trim($titleRegex->groupOr(2, 'Default title'));
+        $artist = trim($artistRegex->groupOr(2, null));
         return [
-            'title' => trim($titleRegex->groupOr(2, 'Default title')),
-            'artist' => trim($artistRegex->groupOr(2, null)),
+            'title' => $title,
+            'artist' => $artist === self::NO_ARTIST_FOUND ? null : $artist,
         ];
     }
 }

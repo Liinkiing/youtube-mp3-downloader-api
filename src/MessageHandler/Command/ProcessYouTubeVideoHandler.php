@@ -38,6 +38,7 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
             $audio
                 ->setTitle($informations['title'])
                 ->setArtist($informations['artist'])
+                ->setDisplayName($informations['displayName'])
                 ->setFilename($informations['filename'])
                 ->setMimeType($informations['mimeType']);
 

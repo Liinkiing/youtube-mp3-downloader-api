@@ -17,9 +17,6 @@
     "behat/transliterator": {
         "version": "v1.2.0"
     },
-    "cocur/slugify": {
-        "version": "v3.2"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -396,10 +393,16 @@
     "symfony/orm-pack": {
         "version": "v1.0.7"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.13.1"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.13.1"
     },
     "symfony/polyfill-intl-idn": {
+        "version": "v1.13.1"
+    },
+    "symfony/polyfill-intl-normalizer": {
         "version": "v1.13.1"
     },
     "symfony/polyfill-mbstring": {
@@ -468,6 +471,9 @@
         "version": "v2.0.1"
     },
     "symfony/stopwatch": {
+        "version": "v5.0.1"
+    },
+    "symfony/string": {
         "version": "v5.0.1"
     },
     "symfony/translation": {

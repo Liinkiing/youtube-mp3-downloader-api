@@ -10,7 +10,6 @@
         "ext-json": "*",
         "antishov/doctrine-extensions-bundle": "^1.4",
         "aws/aws-sdk-php": "^3.128",
-        "cocur/slugify": "^3.2",
         "league/flysystem-aws-s3-v3": "^1.0",
         "oneup/flysystem-bundle": "^3.3",
         "ramsey/uuid-doctrine": "^1.5",
@@ -29,6 +28,7 @@
         "symfony/profiler-pack": "^1.0",
         "symfony/security-bundle": "5.0.*",
         "symfony/serializer-pack": "^1.0",
+        "symfony/string": "5.0.*",
         "symfony/translation": "5.0.*",
         "symfony/validator": "5.0.*",
         "symfony/yaml": "5.0.*"

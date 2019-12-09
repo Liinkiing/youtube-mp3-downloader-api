@@ -34,14 +34,22 @@ class Audio
     private $request;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
+     * @Groups({"api"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $artist;
+
+    /**
+     * @Groups({"api"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $displayName;
 
     public function getFilename(): ?string
     {
@@ -99,6 +107,18 @@ class Audio
     public function setArtist(?string $artist): self
     {
         $this->artist = $artist;
+
+        return $this;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(?string $displayName): self
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }

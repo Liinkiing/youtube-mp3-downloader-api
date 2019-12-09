@@ -9,7 +9,10 @@ use App\Message\Command\ProcessYouTubeVideo;
 use App\Repository\AudioRequestRepository;
 use App\Wrapper\Ytomp3Wrapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class ProcessYouTubeVideoHandler implements MessageHandlerInterface
@@ -17,15 +20,18 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
     private $repository;
     private $em;
     private $ytomp3;
+    private $bus;
 
     public function __construct(
         AudioRequestRepository $repository,
         EntityManagerInterface $em,
+        MessageBusInterface $bus,
         Ytomp3Wrapper $ytomp3
     ) {
         $this->repository = $repository;
         $this->em = $em;
         $this->ytomp3 = $ytomp3;
+        $this->bus = $bus;
     }
 
     public function __invoke(ProcessYouTubeVideo $message)
@@ -33,7 +39,14 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
         $request = $this->repository->find($message->getRequestId());
 
         if ($request && !$request->isProcessed()) {
-            $informations = $this->ytomp3->process($request->getYoutubeUrl());
+            $informations = $this->ytomp3->process($request->getYoutubeUrl(), function ($type, $buffer) {
+                if (Process::OUT === $type) {
+                    $this->bus->dispatch(new Update(
+                        '/test',
+                        $buffer
+                    ));
+                }
+            });
             $audio = new Audio();
             $audio
                 ->setTitle($informations['title'])

@@ -6,6 +6,7 @@ namespace App\Wrapper;
 
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
+use Psr\Log\LoggerInterface;
 use Spatie\Regex\Regex;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -16,23 +17,34 @@ class Ytomp3Wrapper
 {
     private $s3Filesystem;
     private $slugger;
+    private $logger;
 
     private const NO_ARTIST_FOUND = 'No artist found';
     private const TITLE_DELIMITER = 'Title:';
     private const ARTIST_DELIMITER = 'Artist:';
 
-    public function __construct(FilesystemInterface $s3Filesystem, SluggerInterface $slugger)
+    public function __construct(FilesystemInterface $s3Filesystem, SluggerInterface $slugger, LoggerInterface $logger)
     {
         $this->s3Filesystem = $s3Filesystem;
         $this->slugger = $slugger;
+        $this->logger = $logger;
     }
 
-    public function process(string $youtubeUri): array
+    public function process(string $youtubeUri, ?callable $onOuput = null): array
     {
         $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export.mp3';
         $mimeType = 'audio/mpeg';
         $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--output', $output]);
-        $process->mustRun();
+        $process->mustRun(function ($type, $buffer) use ($onOuput) {
+            if (Process::ERR === $type) {
+                $this->logger->error('ERR > ' . $buffer);
+            } else {
+                $this->logger->debug('OUT > ' . $buffer);
+            }
+            if ($onOuput) {
+                $onOuput($type, $buffer);
+            }
+        });
         $meta = $this->extractMedata($process->getOutput());
         $tmpAudio = fopen($output, 'rb+');
         rewind($tmpAudio);

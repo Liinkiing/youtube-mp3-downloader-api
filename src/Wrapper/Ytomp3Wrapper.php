@@ -25,9 +25,10 @@ class Ytomp3Wrapper
         $this->s3Filesystem = $s3Filesystem;
     }
 
-    public function handle(string $youtubeUri): void
+    public function process(string $youtubeUri): array
     {
         $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export.mp3';
+        $mimeType = 'audio/mpeg';
         $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--output', $output]);
         $process->mustRun();
         $meta = $this->extractMedata($process->getOutput());
@@ -36,11 +37,13 @@ class Ytomp3Wrapper
 
         $disposition = HeaderUtils::makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $filename = $this->createFilename($meta, false)
+            $this->createFilename($meta, false)
         );
 
+        $filename = $this->createFilename($meta);
+
         $this->s3Filesystem->putStream(
-            $this->createFilename($meta),
+            $filename,
             $tmpAudio,
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
@@ -50,6 +53,11 @@ class Ytomp3Wrapper
             fclose($tmpAudio);
         }
         @unlink($output);
+
+        return array_merge(
+            $meta,
+            compact('filename', 'mimeType')
+        );
     }
 
     private function createFilename(array $meta, ?bool $slugify = true): string

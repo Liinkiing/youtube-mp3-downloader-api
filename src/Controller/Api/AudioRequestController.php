@@ -7,12 +7,15 @@ namespace App\Controller\Api;
 use App\Controller\ApiController;
 use App\Entity\AudioRequest;
 use App\Form\AudioRequestType;
+use App\Message\Command\ProcessYouTubeVideo;
 use App\Repository\AudioRequestRepository;
+use App\Serializer\FormErrorsSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,6 +23,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AudioRequestController extends ApiController
 {
+
+
+    private $bus;
+
+    public function __construct(FormErrorsSerializer $formErrorsSerializer, MessageBusInterface $bus)
+    {
+        parent::__construct($formErrorsSerializer);
+        $this->bus = $bus;
+    }
 
     /**
      * @Route("/requests", name="api.audio_request.index", methods={"GET"})
@@ -59,6 +71,10 @@ class AudioRequestController extends ApiController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($audioRequest);
             $em->flush();
+
+            $this->bus->dispatch(new ProcessYouTubeVideo(
+                $audioRequest->getId()
+            ));
 
             return $this->json(
                 $audioRequest,

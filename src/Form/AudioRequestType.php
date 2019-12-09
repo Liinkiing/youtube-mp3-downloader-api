@@ -12,7 +12,7 @@ class AudioRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('youtubeId');
+            ->add('youtubeUrl');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

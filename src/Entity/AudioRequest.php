@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AudioRequestRepository")
- * @UniqueEntity("youtubeId")
+ * @UniqueEntity("youtubeUrl")
  */
 class AudioRequest
 {
@@ -25,10 +25,11 @@ class AudioRequest
 
     /**
      * @Groups({"api"})
+     * @Assert\Url()
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $youtubeId;
+    private $youtubeUrl;
 
     /**
      * @Groups({"api"})
@@ -48,14 +49,14 @@ class AudioRequest
         return $this;
     }
 
-    public function getYoutubeId(): ?string
+    public function getYoutubeUrl(): ?string
     {
-        return $this->youtubeId;
+        return $this->youtubeUrl;
     }
 
-    public function setYoutubeId(string $youtubeId): self
+    public function setYoutubeUrl(string $youtubeUrl): self
     {
-        $this->youtubeId = $youtubeId;
+        $this->youtubeUrl = $youtubeUrl;
 
         return $this;
     }

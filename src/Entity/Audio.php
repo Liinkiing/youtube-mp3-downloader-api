@@ -33,6 +33,16 @@ class Audio
      */
     private $request;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $artist;
+
     public function getFilename(): ?string
     {
         return $this->filename;
@@ -65,6 +75,30 @@ class Audio
     public function setRequest(AudioRequest $request): self
     {
         $this->request = $request;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getArtist(): ?string
+    {
+        return $this->artist;
+    }
+
+    public function setArtist(?string $artist): self
+    {
+        $this->artist = $artist;
 
         return $this;
     }

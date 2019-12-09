@@ -6,7 +6,12 @@ namespace App\Controller\Api;
 
 use App\Controller\ApiController;
 use App\Entity\AudioRequest;
+use App\Form\AudioRequestType;
 use App\Repository\AudioRequestRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,4 +42,35 @@ class AudioRequestController extends ApiController
             $request
         );
     }
+
+    /**
+     * @Security("is_granted('ROLE_API')")
+     * @Route("/requests", name="api.audio_request.new", methods={"POST"})
+     */
+    public function new(Request $request, FormFactoryInterface $formFactory, EntityManagerInterface $em): Response
+    {
+        $audioRequest = new AudioRequest();
+        $form = $formFactory->create(AudioRequestType::class, $audioRequest);
+
+        $form->submit(
+            json_decode($request->getContent(), true)
+        );
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($audioRequest);
+            $em->flush();
+
+            return $this->json(
+                $audioRequest,
+                Response::HTTP_CREATED
+            );
+        }
+        return $this->json(
+            [
+                'errors' => $this->createFormErrors($form)
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
+    }
+
 }

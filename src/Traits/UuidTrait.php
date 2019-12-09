@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 trait UuidTrait
 {
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")

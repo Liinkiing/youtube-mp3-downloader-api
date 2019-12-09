@@ -24,7 +24,7 @@ class AudioRequest
     private $isProcessed = false;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @Assert\Url()
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, unique=true)
@@ -32,7 +32,7 @@ class AudioRequest
     private $youtubeUrl;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\OneToOne(targetEntity="App\Entity\Audio", mappedBy="request", cascade={"persist", "remove"})
      */
     private $audio;

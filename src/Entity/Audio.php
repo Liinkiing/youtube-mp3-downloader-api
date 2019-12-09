@@ -16,13 +16,13 @@ class Audio
     use Timestampable;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255)
      */
     private $filename;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255)
      */
     private $mimeType;
@@ -34,19 +34,19 @@ class Audio
     private $request;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $artist;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $displayName;

@@ -11,14 +11,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 trait Timestampable
 {
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @Groups({"api"})
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */

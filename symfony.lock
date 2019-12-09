@@ -271,6 +271,9 @@
     "symfony/event-dispatcher-contracts": {
         "version": "v2.0.1"
     },
+    "symfony/expression-language": {
+        "version": "v5.0.1"
+    },
     "symfony/filesystem": {
         "version": "v5.0.1"
     },
@@ -431,6 +434,30 @@
             "./config/routes.yaml"
         ]
     },
+    "symfony/security-bundle": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "30efd98dd3b4ead6e9ad4713b1efc43bbe94bf77"
+        },
+        "files": [
+            "./config/packages/security.yaml"
+        ]
+    },
+    "symfony/security-core": {
+        "version": "v5.0.1"
+    },
+    "symfony/security-csrf": {
+        "version": "v5.0.1"
+    },
+    "symfony/security-guard": {
+        "version": "v5.0.1"
+    },
+    "symfony/security-http": {
+        "version": "v5.0.1"
+    },
     "symfony/serializer": {
         "version": "v5.0.1"
     },
@@ -474,6 +501,19 @@
             "./config/packages/test/twig.yaml",
             "./config/packages/twig.yaml",
             "./templates/base.html.twig"
+        ]
+    },
+    "symfony/validator": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "d902da3e4952f18d3bf05aab29512eb61cabd869"
+        },
+        "files": [
+            "./config/packages/test/validator.yaml",
+            "./config/packages/validator.yaml"
         ]
     },
     "symfony/var-dumper": {

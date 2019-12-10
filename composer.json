@@ -11,6 +11,7 @@
         "antishov/doctrine-extensions-bundle": "^1.4",
         "aws/aws-sdk-php": "^3.128",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "nelmio/cors-bundle": "^2.0",
         "oneup/flysystem-bundle": "^3.3",
         "ramsey/uuid-doctrine": "^1.5",
         "sensio/framework-extra-bundle": "^5.5",

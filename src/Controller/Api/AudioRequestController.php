@@ -11,7 +11,6 @@ use App\Message\Command\ProcessYouTubeVideo;
 use App\Repository\AudioRequestRepository;
 use App\Serializer\FormErrorsSerializer;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AudioRequestController extends ApiController
 {
-
 
     private $bus;
 
@@ -56,7 +54,6 @@ class AudioRequestController extends ApiController
     }
 
     /**
-     * @Security("is_granted('ROLE_API')")
      * @Route("/requests", name="api.audio_request.new", methods={"POST"})
      */
     public function new(Request $request, FormFactoryInterface $formFactory, EntityManagerInterface $em): Response

@@ -89,7 +89,7 @@ class Ytomp3Wrapper
     {
         $filename = $this->slugger->slug($meta['title'], ' ');
         if ($meta['artist']) {
-            $filename .= ' - ' . $meta['artist'];
+            $filename .= ' - ' . $this->slugger->slug($meta['title'], ' ');
         }
 
         return $filename . '.mp3';

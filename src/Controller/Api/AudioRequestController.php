@@ -34,12 +34,17 @@ class AudioRequestController extends ApiController
     /**
      * @Route("/requests", name="api.audio_request.index", methods={"GET"})
      */
-    public function index(AudioRequestRepository $repository): Response
+    public function index(Request $request, AudioRequestRepository $repository): Response
     {
-        $requests = $repository->findAll();
+        $youtubeUrl = $request->query->get('youtube_url');
 
         return $this->json(
-            $requests
+            $youtubeUrl ?
+                $repository->findOneBy([
+                    'youtubeUrl' => $youtubeUrl,
+                    'isProcessed' => true
+                ]) :
+                $repository->findAll()
         );
     }
 

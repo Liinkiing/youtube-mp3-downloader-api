@@ -51,6 +51,11 @@ class Audio
      */
     private $displayName;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $thumbnailUrl;
+
     public function getFilename(): ?string
     {
         return $this->filename;
@@ -119,6 +124,18 @@ class Audio
     public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getThumbnailUrl(): ?string
+    {
+        return $this->thumbnailUrl;
+    }
+
+    public function setThumbnailUrl(?string $thumbnailUrl): self
+    {
+        $this->thumbnailUrl = $thumbnailUrl;
 
         return $this;
     }

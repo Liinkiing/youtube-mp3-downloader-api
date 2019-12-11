@@ -22,6 +22,7 @@ class Ytomp3Wrapper
     private const NO_ARTIST_FOUND = 'No artist found';
     private const TITLE_DELIMITER = 'Title:';
     private const ARTIST_DELIMITER = 'Artist:';
+    private const THUMBNAIL_DELIMITER = 'Thumbnail:';
 
     public function __construct(FilesystemInterface $s3Filesystem, SluggerInterface $slugger, LoggerInterface $logger)
     {
@@ -99,10 +100,13 @@ class Ytomp3Wrapper
     {
         $titleRegex = Regex::match('/^(' . self::TITLE_DELIMITER . ')(.*$)/m', $output);
         $artistRegex = Regex::match('/^(' . self::ARTIST_DELIMITER . ')(.*$)/m', $output);
+        $thumbnailRegex = Regex::match('/^(' . self::THUMBNAIL_DELIMITER . ')(.*$)/m', $output);
         $title = trim($titleRegex->groupOr(2, 'Default title'));
         $artist = trim($artistRegex->groupOr(2, null));
+        $thumbnail = trim($thumbnailRegex->groupOr(2, null));
         return [
             'title' => $title,
+            'thumbnail' => $thumbnail,
             'artist' => $artist === self::NO_ARTIST_FOUND ? null : $artist,
         ];
     }

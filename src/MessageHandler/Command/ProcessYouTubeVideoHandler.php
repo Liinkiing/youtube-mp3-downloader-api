@@ -10,6 +10,7 @@ use App\Repository\AudioRequestRepository;
 use App\Wrapper\Ytomp3Wrapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Process\Process;
@@ -43,31 +44,46 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
         $request = $this->repository->find($message->getRequestId());
 
         if ($request && !$request->isProcessed()) {
-            $informations = $this->ytomp3->process($request->getYoutubeUrl(), function ($type, $buffer) use ($message) {
-                if (Process::OUT === $type) {
-                    $this->bus->dispatch(new Update(
-                        '/audio/request/' . $message->getRequestId() . '/output',
-                        $buffer
-                    ));
-                }
-            });
-            $audio = new Audio();
-            $audio
-                ->setTitle($informations['title'])
-                ->setArtist($informations['artist'])
-                ->setDisplayName($informations['displayName'])
-                ->setFilename($informations['filename'])
-                ->setMimeType($informations['mimeType']);
+            try {
+                $informations = $this->ytomp3->process($request->getYoutubeUrl(), function ($type, $buffer) use ($message) {
+                    if (Process::OUT === $type) {
+                        // We're stripping the line that launch the command
+                        if (strpos($buffer, 'yarn') !== false) {
+                            return;
+                        }
+                        $this->bus->dispatch(new Update(
+                            '/audio/request/' . $message->getRequestId() . '/output',
+                            $buffer
+                        ));
+                    }
+                });
+                $audio = new Audio();
+                $audio
+                    ->setTitle($informations['title'])
+                    ->setArtist($informations['artist'])
+                    ->setDisplayName($informations['displayName'])
+                    ->setFilename($informations['filename'])
+                    ->setMimeType($informations['mimeType']);
 
-            $request
-                ->setAudio($audio)
-                ->setIsProcessed(true);
+                $request
+                    ->setAudio($audio)
+                    ->setIsProcessed(true);
 
-            $this->em->flush();
-            $this->bus->dispatch(new Update(
-                '/audio/request/' . $message->getRequestId() . '/finish',
-                $this->serializer->serialize(compact('request'), 'json', ['groups' => ['mercure']])
-            ));
+                $this->em->flush();
+                $this->bus->dispatch(new Update(
+                    '/audio/request/' . $message->getRequestId() . '/finish',
+                    $this->serializer->serialize(compact('request'), 'json', ['groups' => ['mercure']])
+                ));
+            } catch (\Exception $exception) {
+                $this->bus->dispatch(new Update(
+                    '/audio/request/' . $message->getRequestId() . '/failed',
+                    $this->serializer->serialize(['reason' => 'nolose'], 'json')
+                ));
+                $this->em->remove($request);
+                $this->em->flush();
+                throw new UnrecoverableMessageHandlingException();
+            }
+
         } else {
             throw new NotFoundResourceException(
                 sprintf('Could not find AudioRequest with ID "%s"', $message->getRequestId())

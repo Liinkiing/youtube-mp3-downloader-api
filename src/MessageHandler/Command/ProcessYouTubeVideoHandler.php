@@ -9,6 +9,8 @@ use App\Message\Command\ProcessYouTubeVideo;
 use App\Repository\AudioRequestRepository;
 use App\Wrapper\Ytomp3Wrapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Spatie\Regex\MatchResult;
+use Spatie\Regex\Regex;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -47,14 +49,15 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
             try {
                 $informations = $this->ytomp3->process($request->getYoutubeUrl(), function ($type, $buffer) use ($message) {
                     if (Process::OUT === $type) {
-                        // We're stripping the line that launch the command
-                        if (strpos($buffer, 'yarn') !== false) {
-                            return;
+                        $buffer = array_map(static function (MatchResult $result) {
+                            return $result->result();
+                        }, Regex::matchAll('/[^\r\n]+/', $buffer)->results());
+                        foreach ($buffer as $row) {
+                            $this->bus->dispatch(new Update(
+                                '/audio/request/' . $message->getRequestId() . '/output',
+                                $row
+                            ));
                         }
-                        $this->bus->dispatch(new Update(
-                            '/audio/request/' . $message->getRequestId() . '/output',
-                            $buffer
-                        ));
                     }
                 });
                 $audio = new Audio();

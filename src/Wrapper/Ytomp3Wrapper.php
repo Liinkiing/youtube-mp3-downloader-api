@@ -20,9 +20,9 @@ class Ytomp3Wrapper
     private $logger;
 
     private const NO_ARTIST_FOUND = 'No artist found';
-    private const TITLE_DELIMITER = 'Title:';
-    private const ARTIST_DELIMITER = 'Artist:';
-    private const THUMBNAIL_DELIMITER = 'Thumbnail:';
+    private const TITLE_REGEX = '/^(Title:)(.*$)/m';
+    private const ARTIST_REGEX = '/^(Artist:)(.*$)/m';
+    private const THUMBNAIL_REGEX = '/^(Thumbnail:)(.*$)/m';
 
     public function __construct(FilesystemInterface $s3Filesystem, SluggerInterface $slugger, LoggerInterface $logger)
     {
@@ -83,6 +83,7 @@ class Ytomp3Wrapper
         if ($meta['artist']) {
             $filename .= ' - ' . $meta['artist'];
         }
+
         return $this->slugger->slug($filename)->lower() . '.mp3';
     }
 
@@ -98,12 +99,14 @@ class Ytomp3Wrapper
 
     private function extractMedata(string $output): array
     {
-        $titleRegex = Regex::match('/^(' . self::TITLE_DELIMITER . ')(.*$)/m', $output);
-        $artistRegex = Regex::match('/^(' . self::ARTIST_DELIMITER . ')(.*$)/m', $output);
-        $thumbnailRegex = Regex::match('/^(' . self::THUMBNAIL_DELIMITER . ')(.*$)/m', $output);
+        $titleRegex = Regex::match(self::TITLE_REGEX, $output);
+        $artistRegex = Regex::match(self::ARTIST_REGEX, $output);
+        $thumbnailRegex = Regex::match(self::THUMBNAIL_REGEX, $output);
+
         $title = trim($titleRegex->groupOr(2, 'Default title'));
         $artist = trim($artistRegex->groupOr(2, null));
         $thumbnail = trim($thumbnailRegex->groupOr(2, null));
+
         return [
             'title' => $title,
             'thumbnail' => $thumbnail,

@@ -35,7 +35,7 @@ class Ytomp3Wrapper
     {
         $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export.mp3';
         $mimeType = 'audio/mpeg';
-        $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--output', $output]);
+        $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--output', $output, '--bitrate', 320]);
         $process->mustRun(function ($type, $buffer) use ($onOuput) {
             if (Process::ERR === $type) {
                 $this->logger->error('ERR > ' . $buffer);

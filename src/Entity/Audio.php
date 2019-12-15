@@ -52,6 +52,7 @@ class Audio
     private $displayName;
 
     /**
+     * @Groups({"api", "mercure"})
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $thumbnailUrl;

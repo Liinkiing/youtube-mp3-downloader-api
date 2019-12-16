@@ -12,21 +12,20 @@ if ($_SERVER['APP_DEBUG']) {
     Debug::enable();
 }
 
-$trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? $_ENV['TRUSTED_PROXIES'] ?? false;
-$trustedProxies = $trustedProxies ? explode(',', $trustedProxies) : [];
-if($_SERVER['APP_ENV'] === 'prod') {
-    $trustedProxies[] = $_SERVER['REMOTE_ADDR'];
-}
-if($trustedProxies) {
-    Request::setTrustedProxies($trustedProxies, Request::HEADER_X_FORWARDED_AWS_ELB);
-}
-
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false) {
     Request::setTrustedHosts([$trustedHosts]);
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request = Request::createFromGlobals();
+
+if ($trustedProxies = $request->server->get('CC_REVERSE_PROXY_IPS')) {
+    // trust *all* requests
+    Request::setTrustedProxies(array_merge(['127.0.0.1'], explode(',', $trustedProxies)),
+        // trust *all* "X-Forwarded-*" headers
+        Request::HEADER_X_FORWARDED_ALL);
+}
+
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);

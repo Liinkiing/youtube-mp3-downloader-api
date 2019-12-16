@@ -1,5 +1,15 @@
 monolog:
     handlers:
+        filter_for_errors:
+            type: fingers_crossed
+            action_level: error
+            handler: error_log_handler
+            excluded_404s:
+                - ^/
+
+        error_log_handler:
+            type: error_log
+            level: info
         main:
             type: fingers_crossed
             action_level: error

@@ -81,7 +81,7 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
             } catch (\Exception $exception) {
                 $this->bus->dispatch(new Update(
                     '/audio/request/' . $message->getRequestId() . '/failed',
-                    $this->serializer->serialize(['reason' => 'nolose'], 'json')
+                    $this->serializer->serialize(['reason' => $exception->getMessage()], 'json')
                 ));
                 $this->em->remove($request);
                 $this->em->flush();

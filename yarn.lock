@@ -50,10 +50,10 @@
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.1.0.tgz#17e8699b5798d4c60e36e2d6326a8ebe5e95a2c5"
   integrity sha512-Drt5u2vzDnIONf4ZEkKtFlbvwj6rI3kxw1Ck9fpudmtgaZIHD4ucsWB2lCZBXRxJgXR+2IMSti+4rtM4C4rXgg==
 
-"@liinkiing/ytomp3@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@liinkiing/ytomp3/-/ytomp3-1.3.2.tgz#71de4f50d09f21be6143fb565f015c0edd885ff0"
-  integrity sha512-p3pubxTmQ9E/C9uwhhtnZTGkkCvf/y4QPuB+V3tCTKSmZn9xnaSDXoTP0/PxFtJBh/ctZOSNsBKSc2TcBLd5iw==
+"@liinkiing/ytomp3@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@liinkiing/ytomp3/-/ytomp3-1.3.3.tgz#36fb4c0e8289a90980a3786dc035197acfeb909e"
+  integrity sha512-Y6CAxM7PMeIZF5yTa6qe1RHUAEjh3wUCfmC4eUMfB42bosneisEOt4/tEZ1LR9uaV5a/+uCcnBcWCMYM6tmj4A==
   dependencies:
     "@ffmpeg-installer/ffmpeg" "^1.0.20"
     "@oclif/command" "^1"

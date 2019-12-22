@@ -19,4 +19,30 @@ class AudioRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, AudioRequest::class);
     }
 
+    /**
+     * @param \DateInterval $since
+     * @return AudioRequest[]
+     * @throws \Exception
+     */
+    public function findSince(\DateInterval $since): iterable
+    {
+        $qb = $this->createQueryBuilder('ar');
+
+        return $qb
+            ->andWhere(
+                $qb->expr()->between(
+                    'ar.createdAt',
+                    ':since',
+                    ':from'
+                )
+            )
+            ->setParameters([
+                'since' => (new \DateTimeImmutable('now'))->sub($since),
+                'from' => new \DateTimeImmutable('now')
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
+
 }

@@ -58,7 +58,7 @@ class CleanStorageCommand extends Command
                 $io->warning(
                     sprintf(
                         'File "%s" not found in storage.',
-                        $request->getVideo()->getPath()
+                        $request->getAudio()->getFilename()
                     )
                 );
             } finally {

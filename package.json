@@ -6,6 +6,6 @@
   "author": "Omar Jbara <omar.jbara2@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@liinkiing/ytomp3": "^1.3.3"
+    "@liinkiing/ytomp3": "^1.3.4"
   }
 }

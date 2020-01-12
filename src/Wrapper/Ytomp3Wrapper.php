@@ -20,7 +20,7 @@ class Ytomp3Wrapper
     private $logger;
 
     private const NO_ARTIST_FOUND = 'No artist found';
-    private const PLAYLIST_TITLE_REGEX = '/^Processing "(.*)" playlist/m';
+    private const PLAYLIST_REGEX = '/^Processing "(.*)" playlist with (\d+) items/m';
     private const TITLE_REGEX = '/^(Title:)(.*$)/m';
     private const ARTIST_REGEX = '/^(Artist:)(.*$)/m';
     private const THUMBNAIL_REGEX = '/^(Thumbnail:)(.*$)/m';
@@ -47,9 +47,9 @@ class Ytomp3Wrapper
             }
         });
         $meta = $this->extractMedata($process->getOutput());
-        $isPlaylist = $meta['playlist_title'] !== null;
+        $isPlaylist = $meta['playlistTitle'] !== null;
         $mimeType = $isPlaylist ? 'application/zip' : 'audio/mpeg';
-        $tmpFile = fopen($output, 'rb+');
+        $tmpFile = fopen($output . ($isPlaylist ? '.zip' : '.mp3'), 'rb+');
         rewind($tmpFile);
 
         $filename = $this->createFilename($meta, $isPlaylist);
@@ -75,7 +75,7 @@ class Ytomp3Wrapper
 
         return array_merge(
             $meta,
-            compact('filename', 'mimeType', 'displayName')
+            compact('filename', 'mimeType', 'displayName', 'isPlaylist')
         );
     }
 
@@ -86,7 +86,7 @@ class Ytomp3Wrapper
             $filename .= ' - ' . $meta['artist'];
         }
         if ($isPlaylist) {
-            $filename = $meta['playlist_title'];
+            $filename = $meta['playlistTitle'];
         }
 
         return $this->slugger->slug($filename)->lower() . ($isPlaylist ? '.zip' : '.mp3');
@@ -99,7 +99,7 @@ class Ytomp3Wrapper
             $filename .= ' - ' . $this->slugger->slug($meta['artist'], ' ');
         }
         if ($isPlaylist) {
-            $filename = $this->slugger->slug($meta['playlist_title'], ' ');
+            $filename = $this->slugger->slug($meta['playlistTitle'], ' ');
         }
 
         return $filename . ($isPlaylist ? '.zip' : '.mp3');
@@ -107,18 +107,20 @@ class Ytomp3Wrapper
 
     private function extractMedata(string $output): array
     {
-        $playlistTitleRegex = Regex::match(self::PLAYLIST_TITLE_REGEX, $output);
+        $playlistRegex = Regex::match(self::PLAYLIST_REGEX, $output);
         $titleRegex = Regex::match(self::TITLE_REGEX, $output);
         $artistRegex = Regex::match(self::ARTIST_REGEX, $output);
         $thumbnailRegex = Regex::match(self::THUMBNAIL_REGEX, $output);
 
-        $playlistTitle = trim($playlistTitleRegex->groupOr(1, null));
+        $playlistTitle = trim($playlistRegex->groupOr(1, ''));
+        $playlistItemsCount = $playlistRegex->groupOr(2, '');
         $title = trim($titleRegex->groupOr(2, 'Default title'));
         $artist = trim($artistRegex->groupOr(2, null));
         $thumbnail = trim($thumbnailRegex->groupOr(2, null));
 
         return [
-            'playlist_title' => $playlistTitle,
+            'playlistTitle' => empty($playlistTitle) ? null : $playlistTitle,
+            'playlistItemsCount' => empty($playlistItemsCount) ? null : (int)$playlistItemsCount,
             'title' => $title,
             'thumbnail' => $thumbnail,
             'artist' => $artist === self::NO_ARTIST_FOUND ? null : $artist,

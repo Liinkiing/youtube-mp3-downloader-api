@@ -70,6 +70,9 @@ class ProcessYouTubeVideoHandler implements MessageHandlerInterface
                     ->setMimeType($informations['mimeType']);
 
                 $request
+                    ->setIsPlaylist($informations['isPlaylist'])
+                    ->setPlaylistTitle($informations['playlistTitle'])
+                    ->setPlaylistItemsCount($informations['playlistItemsCount'])
                     ->setAudio($audio)
                     ->setIsProcessed(true);
 

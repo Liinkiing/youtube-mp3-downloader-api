@@ -37,6 +37,24 @@ class AudioRequest
      */
     private $audio;
 
+    /**
+     * @Groups({"api", "mercure"})
+     * @ORM\Column(type="boolean")
+     */
+    private $isPlaylist = false;
+
+    /**
+     * @Groups({"api", "mercure"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $playlistTitle;
+
+    /**
+     * @Groups({"api", "mercure"})
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $playlistItemsCount;
+
     public function isProcessed(): ?bool
     {
         return $this->isProcessed;
@@ -74,6 +92,42 @@ class AudioRequest
         if ($audio->getRequest() !== $this) {
             $audio->setRequest($this);
         }
+
+        return $this;
+    }
+
+    public function getIsPlaylist(): ?bool
+    {
+        return $this->isPlaylist;
+    }
+
+    public function setIsPlaylist(bool $isPlaylist): self
+    {
+        $this->isPlaylist = $isPlaylist;
+
+        return $this;
+    }
+
+    public function getPlaylistTitle(): ?string
+    {
+        return $this->playlistTitle;
+    }
+
+    public function setPlaylistTitle(?string $playlistTitle): self
+    {
+        $this->playlistTitle = $playlistTitle;
+
+        return $this;
+    }
+
+    public function getPlaylistItemsCount(): ?int
+    {
+        return $this->playlistItemsCount;
+    }
+
+    public function setPlaylistItemsCount(?int $playlistItemsCount): self
+    {
+        $this->playlistItemsCount = $playlistItemsCount;
 
         return $this;
     }

@@ -20,6 +20,7 @@ class Ytomp3Wrapper
     private $logger;
 
     private const NO_ARTIST_FOUND = 'No artist found';
+    private const PLAYLIST_TITLE_REGEX = '/^Processing "(.*)" playlist/m';
     private const TITLE_REGEX = '/^(Title:)(.*$)/m';
     private const ARTIST_REGEX = '/^(Artist:)(.*$)/m';
     private const THUMBNAIL_REGEX = '/^(Thumbnail:)(.*$)/m';
@@ -33,9 +34,8 @@ class Ytomp3Wrapper
 
     public function process(string $youtubeUri, ?callable $onOuput = null): array
     {
-        $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export.mp3';
-        $mimeType = 'audio/mpeg';
-        $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--output', $output, '--bitrate', 320]);
+        $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'exported';
+        $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--name', $output, '--bitrate', 320]);
         $process->mustRun(function ($type, $buffer) use ($onOuput) {
             if (Process::ERR === $type) {
                 $this->logger->error('ERR > ' . $buffer);
@@ -47,11 +47,13 @@ class Ytomp3Wrapper
             }
         });
         $meta = $this->extractMedata($process->getOutput());
-        $tmpAudio = fopen($output, 'rb+');
-        rewind($tmpAudio);
+        $isPlaylist = $meta['playlist_title'] !== null;
+        $mimeType = $isPlaylist ? 'application/zip' : 'audio/mpeg';
+        $tmpFile = fopen($output, 'rb+');
+        rewind($tmpFile);
 
-        $filename = $this->createFilename($meta);
-        $displayName = $this->createDisplayname($meta);
+        $filename = $this->createFilename($meta, $isPlaylist);
+        $displayName = $this->createDisplayname($meta, $isPlaylist);
 
         $disposition = HeaderUtils::makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
@@ -61,13 +63,13 @@ class Ytomp3Wrapper
 
         $this->s3Filesystem->putStream(
             $filename,
-            $tmpAudio,
+            $tmpFile,
             [
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                 'ContentDisposition' => $disposition
             ]);
-        if (is_resource($tmpAudio)) {
-            fclose($tmpAudio);
+        if (is_resource($tmpFile)) {
+            fclose($tmpFile);
         }
         @unlink($output);
 
@@ -77,37 +79,46 @@ class Ytomp3Wrapper
         );
     }
 
-    private function createFilename(array $meta): string
+    private function createFilename(array $meta, bool $isPlaylist): string
     {
         $filename = $meta['title'];
         if ($meta['artist']) {
             $filename .= ' - ' . $meta['artist'];
         }
+        if ($isPlaylist) {
+            $filename = $meta['playlist_title'];
+        }
 
-        return $this->slugger->slug($filename)->lower() . '.mp3';
+        return $this->slugger->slug($filename)->lower() . ($isPlaylist ? '.zip' : '.mp3');
     }
 
-    private function createDisplayname(array $meta): string
+    private function createDisplayname(array $meta, bool $isPlaylist): string
     {
         $filename = $this->slugger->slug($meta['title'], ' ');
         if ($meta['artist']) {
             $filename .= ' - ' . $this->slugger->slug($meta['artist'], ' ');
         }
+        if ($isPlaylist) {
+            $filename = $this->slugger->slug($meta['playlist_title'], ' ');
+        }
 
-        return $filename . '.mp3';
+        return $filename . ($isPlaylist ? '.zip' : '.mp3');
     }
 
     private function extractMedata(string $output): array
     {
+        $playlistTitleRegex = Regex::match(self::PLAYLIST_TITLE_REGEX, $output);
         $titleRegex = Regex::match(self::TITLE_REGEX, $output);
         $artistRegex = Regex::match(self::ARTIST_REGEX, $output);
         $thumbnailRegex = Regex::match(self::THUMBNAIL_REGEX, $output);
 
+        $playlistTitle = trim($playlistTitleRegex->groupOr(1, null));
         $title = trim($titleRegex->groupOr(2, 'Default title'));
         $artist = trim($artistRegex->groupOr(2, null));
         $thumbnail = trim($thumbnailRegex->groupOr(2, null));
 
         return [
+            'playlist_title' => $playlistTitle,
             'title' => $title,
             'thumbnail' => $thumbnail,
             'artist' => $artist === self::NO_ARTIST_FOUND ? null : $artist,

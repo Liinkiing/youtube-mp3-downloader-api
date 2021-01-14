@@ -5,7 +5,10 @@
   "repository": "git@github.com:Liinkiing/youtube-mp3-downloader-api.git",
   "author": "Omar Jbara <omar.jbara2@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "symfony serve"
+  },
   "dependencies": {
-    "@liinkiing/ytomp3": "^1.4.7"
+    "@liinkiing/ytomp3": "^1.5.0"
   }
 }

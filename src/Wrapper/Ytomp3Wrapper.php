@@ -35,7 +35,7 @@ class Ytomp3Wrapper
     public function process(string $youtubeUri, ?callable $onOuput = null): array
     {
         $output = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'exported';
-        $process = new Process(['yarn', 'ytomp3', $youtubeUri, '--name', $output, '--bitrate', 320]);
+        $process = new Process(['npx', 'ytomp3', $youtubeUri, '--name', $output, '--bitrate', 320]);
         $process->mustRun(function ($type, $buffer) use ($onOuput) {
             if (Process::ERR === $type) {
                 $this->logger->error('ERR > ' . $buffer);

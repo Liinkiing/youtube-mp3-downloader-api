@@ -9,6 +9,6 @@
     "dev": "symfony serve"
   },
   "dependencies": {
-    "@liinkiing/ytomp3": "^1.5.0"
+    "@liinkiing/ytomp3": "^1.5.1"
   }
 }

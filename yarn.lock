@@ -50,10 +50,10 @@
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.1.0.tgz#17e8699b5798d4c60e36e2d6326a8ebe5e95a2c5"
   integrity sha512-Drt5u2vzDnIONf4ZEkKtFlbvwj6rI3kxw1Ck9fpudmtgaZIHD4ucsWB2lCZBXRxJgXR+2IMSti+4rtM4C4rXgg==
 
-"@liinkiing/ytomp3@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@liinkiing/ytomp3/-/ytomp3-1.5.1.tgz#0077f47d2232aed0fbc3650221c4450c67dc48fe"
-  integrity sha512-/STWnFp6QsBO8V5UxmG3NLd67E7F/3YpzYU8H+ShsnLTUgxJHnX7WgqkY12frslcZWSATP4+ZLzTTkf2fCxxPQ==
+"@liinkiing/ytomp3@^1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@liinkiing/ytomp3/-/ytomp3-1.5.4.tgz#d4011f5a0e26b2e2b16e12bc85407678e445d1d3"
+  integrity sha512-sDkK12CMTUVYbnUSVVCow0sy9f3bUSrDFz0uG+5KI4SNb/QlB9VgYWB0KoCP/K+q8qzBIBfVXOlzGk0ncfdL1A==
   dependencies:
     "@ffmpeg-installer/ffmpeg" "^1.0.20"
     "@oclif/command" "^1"
@@ -67,8 +67,8 @@
     sharp "^0.27.0"
     tslib "^2"
     ytdl "^1.4.1"
-    ytdl-core "^4.8.3"
-    ytpl "^2.2.1"
+    ytdl-core "^4.9.1"
+    ytpl "^2.2.3"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -846,7 +846,7 @@ miniget@^4.0.0:
   resolved "https://registry.yarnpkg.com/miniget/-/miniget-4.1.0.tgz#018cc1180d2fe4d45ed735ac6bd2ab7224e8bceb"
   integrity sha512-kzhrNv5L7LlomwGmPGQsLQ2PnT1LeJJWfB0wNFGyv426gEM1gsfziBQmfkr6XOBA8EusZg9nowlNT5CbuKTjZg==
 
-miniget@^4.2.0:
+miniget@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/miniget/-/miniget-4.2.1.tgz#11a1c24817a059e292378eb9cff4328d9240c665"
   integrity sha512-O/DduzDR6f+oDtVype9S/Qu5hhnx73EDYGyZKwU/qN82lehFZdfhoa4DT51SpsO+8epYrB3gcRmws56ROfTIoQ==
@@ -1394,10 +1394,19 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-ytdl-core@^4.1.0, ytdl-core@^4.8.3:
+ytdl-core@^4.1.0:
   version "4.8.3"
   resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-4.8.3.tgz#21570d1834db13dec7828cf87bbf4c83c0fe68d7"
   integrity sha512-cWCBeX4FCgjcKmuVK384MT582RIAakpUSeMF/NPVmhO8cWiG+LeQLnBordvLolb0iXYzfUvalgmycYAE5Sy6Xw==
+  dependencies:
+    m3u8stream "^0.8.3"
+    miniget "^4.0.0"
+    sax "^1.1.3"
+
+ytdl-core@^4.9.1:
+  version "4.9.1"
+  resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-4.9.1.tgz#f587e2bd8329b5133c0bac4ce5ee1f3c7a1175a9"
+  integrity sha512-6Jbp5RDhUEozlaJQAR+l8oV8AHsx3WUXxSyPxzE6wOIAaLql7Hjiy0ZM58wZoyj1YEenlEPjEqcJIjKYKxvHtQ==
   dependencies:
     m3u8stream "^0.8.3"
     miniget "^4.0.0"
@@ -1418,9 +1427,9 @@ ytdl@^1.4.1:
     streamspeed "^2.0.1"
     ytdl-core "^4.1.0"
 
-ytpl@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/ytpl/-/ytpl-2.2.1.tgz#e514eccdd46e02eeb0d16e08f8278489258ab31a"
-  integrity sha512-sxty58s4JTNCDkiaiTkcaXfWCOW5sfHOPwDQtWIkoU4C+Kht2qat8yaLVbWZIclUSZo+naANyaI7LGjhhrErGA==
+ytpl@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/ytpl/-/ytpl-2.2.3.tgz#46c40d98981d06a4f89b7b1d708be31f2502e10c"
+  integrity sha512-d18HibT8wzEWzWsXFS6u6kUKCCFL20roFVwpjyGCzl+nP8sOAz5xSLafxLflkkoeXJU8AFuO7BEsJXIREASvFQ==
   dependencies:
-    miniget "^4.2.0"
+    miniget "^4.2.1"
